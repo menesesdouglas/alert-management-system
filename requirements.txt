@@ -1,0 +1,4 @@
+tkinter
+tkcalendar
+pyodbc
+pandas
