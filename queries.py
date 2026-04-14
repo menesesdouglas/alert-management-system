@@ -1,15 +1,17 @@
 import pyodbc
 import pandas as pd
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+global connection_string
+connection_string = os.getenv('CONNECTION_STRING')
 
 def insert_allert_to_db(allert,allert_datetime):
     try:
         # Conexão com o banco de dados
-        conn = pyodbc.connect(
-            'DRIVER={SQL Server};'
-            'SERVER=localhost\\SQLEXPRESS,3197;'
-            'DATABASE=seu_banco;'
-            'UID=seu_user;'
-            'PWD=seu_pwd;')
+        conn = pyodbc.connect(connection_string)
         cursor = conn.cursor()
 
         # Inserts na tabela de Avisos
@@ -26,11 +28,7 @@ def select_allerts_from_db():
     try:
         # Conexão com o banco de dados
         conn = pyodbc.connect(
-            'DRIVER={SQL Server};'
-            'SERVER=localhost\\SQLEXPRESS,3197;'
-            'DATABASE=seu_banco;'
-            'UID=seu_user;'
-            'PWD=seu_pwd;')
+            connection_string)
         cursor = conn.cursor()
 
         # Select dos avisos pendentes e finalizados
@@ -49,11 +47,7 @@ def select_allerts_from_db_by_id(allert_id):
     try:
         # Conexão com o banco de dados
         conn = pyodbc.connect(
-            'DRIVER={SQL Server};'
-            'SERVER=localhost\\SQLEXPRESS,3197;'
-            'DATABASE=seu_banco;'
-            'UID=seu_user;'
-            'PWD=seu_pwd;')
+            connection_string)
         cursor = conn.cursor()
 
         # Select dos avisos pendentes e finalizados
@@ -71,11 +65,7 @@ def select_allerts_from_db_by_id(allert_id):
 def select_canceled_allerts_from_db():
     try:
         conn = pyodbc.connect(
-            'DRIVER={SQL Server};'
-            'SERVER=localhost\\SQLEXPRESS,3197;'
-            'DATABASE=seu_banco;'
-            'UID=seu_user;'
-            'PWD=seu_pwd;')
+            connection_string)
         cursor = conn.cursor()
 
         cursor.execute("""
@@ -93,11 +83,7 @@ def update_allert_status_in_db(allert,statusID):
     try:
         # Conexão com o banco de dados
         conn = pyodbc.connect(
-            'DRIVER={SQL Server};'
-            'SERVER=localhost\\SQLEXPRESS,3197;'
-            'DATABASE=seu_banco;'
-            'UID=seu_user;'
-            'PWD=seu_pwd;')
+            connection_string)
         cursor = conn.cursor()
 
         # Update na tabela de Avisos
@@ -112,11 +98,7 @@ def update_allert_status_in_db(allert,statusID):
 def select_pending_allerts_from_db():
     try:
         conn = pyodbc.connect(
-            'DRIVER={SQL Server};'
-            'SERVER=localhost\\SQLEXPRESS,3197;'
-            'DATABASE=seu_banco;'
-            'UID=seu_user;'
-            'PWD=seu_pwd;')
+            connection_string)
         cursor = conn.cursor()
 
         cursor.execute("""

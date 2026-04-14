@@ -99,8 +99,7 @@ class Application(Frame):
         try:
             allert_id = self.allert_index.get()
             allert = qrs.select_allerts_from_db_by_id(allert_id)
-            formatted_allert = self.format_dataframe_to_string(allert)
-            self.popups(formatted_allert)
+            self.popups(allert.to_string(index=False))
         except Exception as e:
             message_error = f"An error occurred while fetching the alert: {e}"
             self.popups(message_error)
@@ -108,8 +107,7 @@ class Application(Frame):
     def get_all_allerts(self):
         try:
             allerts = qrs.select_allerts_from_db()
-            formatted_allerts = self.format_dataframe_to_string(allerts)
-            self.popups(formatted_allerts)
+            self.popups(allerts.to_string(index=False))
         except Exception as e:
             message_error = f'An error occurred while fetching all alerts: {e}'
             self.popups(message_error)
@@ -117,8 +115,7 @@ class Application(Frame):
     def get_all_canceled_allerts(self):
         try:
             allerts = qrs.select_canceled_allerts_from_db()
-            formatted_allerts = self.format_dataframe_to_string(allerts)
-            self.popups(formatted_allerts)
+            self.popups(allerts.to_string(index=False))
         except Exception as e:
             message_error = f'An error occurred while fetching all alerts: {e}'
             self.popups(message_error)
@@ -126,24 +123,14 @@ class Application(Frame):
     def cancel_allert(self):
         try:
             allert_index = self.allert_index.get()
-            formatted_allert = self.format_dataframe_to_string(qrs.select_allerts_from_db_by_id(allert_index))
-            if formatted_allert == "No alerts found.":
+            allert = qrs.select_allerts_from_db_by_id(allert_index)
+            if allert.empty:
                 self.popups(f"No alert found with ID {allert_index}.")
                 return
             qrs.update_allert_status_in_db(allert_index, 3)
             self.after(0, lambda: self.popups(f"Alert with ID {allert_index} canceled successfully!"))
         except Exception as e:
             self.after(0, lambda: self.popups(f"An error occurred while canceling the alert with ID {allert_index}: {e}"))
-    
-    def format_dataframe_to_string(self, df):
-        if df.empty:
-            return "No alerts found."
-        
-        result = []
-        for _, row in df.iterrows():
-            row_str = "\n".join([f"{col}: {val}" for col, val in row.items()])
-            result.append(row_str)
-            return "\n\n".join(result)
 
     def verify_pending_allerts(self):
         while True:
